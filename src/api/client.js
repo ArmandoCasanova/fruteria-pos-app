@@ -16,9 +16,16 @@ const productSort = (a, b) => {
   return (b.sales_count || 0) - (a.sales_count || 0)
 }
 
+const getHeaders = () => ({
+  'Content-Type': 'application/json',
+  'X-API-Key': import.meta.env.VITE_API_KEY
+})
+
 export const fetchRemoteProducts = async (baseUrl) => {
   if (!baseUrl) throw new Error('IP no configurada')
-  const res = await fetch(`${baseUrl}/api/products`)
+  const res = await fetch(`${baseUrl}/api/products`, {
+    headers: getHeaders()
+  })
   if (!res.ok) throw new Error('Error de red')
   const data = await res.json()
   
@@ -51,9 +58,8 @@ export const getLocalProducts = async () => {
 }
 
 export const pushProduct = async (baseUrl, product) => {
-  await dbStore.setItem(String(product.id), product)
-
   if (!baseUrl) {
+    await dbStore.setItem(String(product.id), product)
     await queueOperation('upsert-product', product)
     return product
   }
@@ -61,12 +67,15 @@ export const pushProduct = async (baseUrl, product) => {
   try {
     const res = await fetch(`${baseUrl}/api/upsert-product`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getHeaders(),
       body: JSON.stringify(product)
     })
-    if (!res.ok) throw new Error()
-    return await res.json()
+    if (!res.ok) throw new Error('Error al guardar')
+    const saved = await res.json()
+    await dbStore.setItem(String(saved.id), saved)
+    return saved
   } catch {
+    await dbStore.setItem(String(product.id), product)
     await queueOperation('upsert-product', product)
     return product
   }
@@ -88,7 +97,7 @@ export const processQueue = async (baseUrl) => {
       if (op.type === 'upsert-product') {
         await fetch(`${baseUrl}/api/upsert-product`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: getHeaders(),
           body: JSON.stringify(op.payload)
         })
       }
@@ -103,7 +112,7 @@ export const generateRemotePin = async (baseUrl, pin) => {
   if (!baseUrl) throw new Error('IP no configurada')
   const res = await fetch(`${baseUrl}/api/generate-temp-pin`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getHeaders(),
     body: JSON.stringify({ pin })
   })
   if (!res.ok) throw new Error()
@@ -112,7 +121,9 @@ export const generateRemotePin = async (baseUrl, pin) => {
 
 export const fetchSettings = async (baseUrl) => {
   if (!baseUrl) throw new Error('IP no configurada')
-  const res = await fetch(`${baseUrl}/api/settings`)
+  const res = await fetch(`${baseUrl}/api/settings`, {
+    headers: getHeaders()
+  })
   if (!res.ok) throw new Error('Error de red')
   return await res.json()
 }

@@ -4,7 +4,7 @@ import { fetchSettings, processQueue, syncQueue } from '../api/client'
 const AppContext = createContext(null)
 
 export const AppProvider = ({ children }) => {
-  const [baseUrl, setBaseUrl] = useState(localStorage.getItem('pos_ip') || 'http://192.168.1.105:3000')
+  const [baseUrl, setBaseUrl] = useState(localStorage.getItem('pos_ip') || `http://${import.meta.env.VITE_DEFAULT_POS_IP}:3000`)
   const [isOnline, setIsOnline] = useState(navigator.onLine)
   const [pendingSync, setPendingSync] = useState(0)
   const [settings, setSettings] = useState(null)

@@ -25,3 +25,8 @@ dist-ssr
 
 # PWA / Dev dist
 dev-dist
+
+# Env files
+.env
+.env.local
+.env.*.local
