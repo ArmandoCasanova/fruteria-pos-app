@@ -1,0 +1,36 @@
+import { NavLink } from 'react-router-dom'
+import { MdInventory, MdVpnKey, MdSettings } from 'react-icons/md'
+import { useAppConfig } from '../../context/AppProvider'
+
+export const BottomNav = () => {
+  const { pendingSync } = useAppConfig()
+
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 pb-4">
+      <div className="flex justify-around items-center h-16 max-w-2xl mx-auto">
+        <NavItem to="/inventory" icon={<MdInventory size={24} />} label="Inventario" badge={pendingSync} />
+        <NavItem to="/security" icon={<MdVpnKey size={24} />} label="Seguridad" />
+        <NavItem to="/settings" icon={<MdSettings size={24} />} label="Ajustes" />
+      </div>
+    </nav>
+  )
+}
+
+const NavItem = ({ to, icon, label, badge }) => (
+  <NavLink
+    to={to}
+    className={({ isActive }) =>
+      `flex flex-col items-center justify-center w-full h-full space-y-1 relative transition-colors ${
+        isActive ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600'
+      }`
+    }
+  >
+    {icon}
+    <span className="text-[10px] font-medium tracking-wide">{label}</span>
+    {badge > 0 && (
+      <span className="absolute top-1 right-[20%] bg-orange-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
+        {badge}
+      </span>
+    )}
+  </NavLink>
+)
