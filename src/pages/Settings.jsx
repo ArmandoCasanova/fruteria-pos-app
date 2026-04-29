@@ -37,7 +37,7 @@ export default function Settings() {
             className="w-full pl-10 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-xl text-base font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
           />
         </div>
-        
+
         <button
           onClick={handleSave}
           className="mt-4 w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl transition-colors active:scale-[0.98]"
