@@ -1,5 +1,5 @@
 import { useAppConfig } from '../../context/AppProvider'
-import { MdWifi, MdWifiOff, MdSearch, MdRefresh } from 'react-icons/md'
+import { MdWifi, MdWifiOff, MdSearch, MdRefresh, MdClose } from 'react-icons/md'
 import logo from '../../assets/logo.png'
 import { useLocation } from 'react-router-dom'
 
@@ -76,8 +76,16 @@ export const Header = () => {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Buscar productos o códigos..."
-            className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-xl font-medium text-slate-800 placeholder-slate-400 shadow focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+            className="w-full pl-10 pr-12 py-3 bg-white border border-slate-200 rounded-2xl text-xl font-medium text-slate-800 placeholder-slate-400 shadow focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
           />
+          {search && (
+            <button
+              onClick={() => setSearch('')}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-rose-500 transition-colors"
+            >
+              <MdClose size={24} />
+            </button>
+          )}
         </div>
       )}
       {!isConnected && pendingSync > 0 && (

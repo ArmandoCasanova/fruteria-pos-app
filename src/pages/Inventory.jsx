@@ -7,7 +7,7 @@ import { ProductCard } from '../components/inventory/ProductCard'
 
 export default function Inventory() {
   const navigate = useNavigate()
-  const { baseUrl, isOnline, checkSyncStatus, search, refreshing } = useAppConfig()
+  const { baseUrl, isOnline, checkSyncStatus, search, setSearch, refreshing } = useAppConfig()
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -37,8 +37,16 @@ export default function Inventory() {
 
   const filtered = useMemo(() => {
     if (!search) return products
-    const s = search.toLowerCase()
-    return products.filter(p => p.name?.toLowerCase().includes(s) || p.barcode?.includes(s))
+    
+    const normalize = (str) => 
+      str?.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") || ""
+    
+    const s = normalize(search)
+    
+    return products.filter(p => 
+      normalize(p.name).includes(s) || 
+      p.barcode?.includes(search)
+    )
   }, [products, search])
 
   return (
@@ -51,12 +59,22 @@ export default function Inventory() {
           </div>
         )}
         {filtered.map(p => (
-          <ProductCard key={p.id} product={p} onClick={() => navigate('/edit', { state: { product: p } })} />
+          <ProductCard 
+            key={p.id} 
+            product={p} 
+            onClick={() => {
+              setSearch('')
+              navigate('/edit', { state: { product: p } })
+            }} 
+          />
         ))}
       </div>
 
       <button
-        onClick={() => navigate('/edit')}
+        onClick={() => {
+          setSearch('')
+          navigate('/edit')
+        }}
         className="fixed bottom-20 right-4 w-16 h-16 bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-emerald-700 active:scale-95 transition-transform z-50"
       >
         <MdAdd size={32} />

@@ -313,6 +313,8 @@ export default function ProductEditor() {
   }, [form.cost_price, form.sale_price, defaultMargin])
 
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }))
+  
+  const handleCancel = () => navigate(-1)
 
   const handleFileChange = e => {
     const file = e.target.files?.[0]
@@ -415,18 +417,18 @@ export default function ProductEditor() {
       <div className="fixed inset-0 z-40 bg-[#f8fafc] overflow-y-auto flex flex-col">
 
         {/* Header */}
-        <div className="flex items-center gap-3 px-4 pt-4 pb-3 bg-white border-b border-slate-100 flex-shrink-0 sticky top-0 z-10">
+        <div className="relative flex items-center px-4 pt-4 pb-3 bg-white border-b border-slate-100 flex-shrink-0 sticky top-0 z-10 min-h-[64px]">
           <button
-            onClick={() => navigate(-1)}
-            className="w-9 h-9 flex items-center justify-center rounded-xl text-slate-500 active:bg-slate-100 transition-colors"
+            onClick={handleCancel}
+            className="z-20 w-10 h-10 flex items-center justify-center rounded-xl text-slate-500 active:bg-slate-100 transition-colors"
           >
-            <MdArrowBack size={24} />
+            <MdArrowBack size={28} />
           </button>
-          <div className="flex-1 min-w-0">
-            <h1 className="font-bold text-slate-900 text-xl text-center ml-[-40px]"> 
+          
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-12">
+            <h1 className="font-bold text-slate-900 text-xl text-center truncate"> 
               {isEdit ? 'Editar Producto' : 'Nuevo Producto'}
             </h1>
-
           </div>
         </div>
 
@@ -434,7 +436,7 @@ export default function ProductEditor() {
         <div className="px-4 py-4 pb-40 flex flex-col gap-4">
 
           {/* Image */}
-          <div className="bg-white rounded-2xl p-4 border border-slate-100">
+          <div className="p-2">
             <ImagePicker
               image={form.image}
               onFileChange={handleFileChange}
@@ -450,17 +452,18 @@ export default function ProductEditor() {
                 value={form.name}
                 onChange={e => set('name', e.target.value)}
                 placeholder="Ej. Manzana Gala"
-                className={errors.name ? inputError : inputNormal}
+                className={errors.name 
+                  ? `${inputError} text-2xl font-bold` 
+                  : `${inputNormal} text-2xl font-bold`
+                }
               />
               {errors.name && <p className="text-sm text-rose-500 mt-1 flex items-center gap-1"><MdWarning size={12} />{errors.name}</p>}
             </Field>
 
-            {/* Barcode: read-only in edit, hidden in create */}
             {isEdit && existing.barcode && (
               <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-xl border border-slate-100">
                 <MdQrCodeScanner size={16} className="text-slate-400 flex-shrink-0" />
                 <span className="text-sm font-mono text-slate-500 select-all">{existing.barcode}</span>
-                <span className="ml-auto text-xs font-bold text-slate-400 uppercase tracking-wider">Solo lectura</span>
               </div>
             )}
           </div>
@@ -608,7 +611,7 @@ export default function ProductEditor() {
           style={{ paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}
         >
           <button
-            onClick={() => navigate(-1)}
+            onClick={handleCancel}
             className="flex-1 py-4 rounded-2xl border-2 border-slate-200 font-bold text-slate-600 text-lg active:bg-slate-50 transition-colors"
           >
             Cancelar

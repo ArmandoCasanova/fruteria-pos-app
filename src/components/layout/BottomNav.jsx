@@ -19,18 +19,26 @@ export const BottomNav = () => {
 const NavItem = ({ to, icon, label, badge }) => (
   <NavLink
     to={to}
-    className={({ isActive }) =>
-      `flex flex-col items-center justify-center w-full h-full space-y-1 relative transition-colors ${
-        isActive ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600'
-      }`
-    }
+    className="flex flex-col items-center justify-center w-full h-full relative transition-all duration-300"
   >
-    {icon}
-    <span className="text-[10px] font-medium tracking-wide">{label}</span>
-    {badge > 0 && (
-      <span className="absolute top-1 right-[20%] bg-orange-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
-        {badge}
-      </span>
+    {({ isActive }) => (
+      <>
+        <div className={`flex flex-col items-center justify-center px-6 py-1.5 rounded-2xl transition-all duration-300 ${
+          isActive 
+            ? 'bg-gray-100 text-emerald-700' 
+            : 'text-slate-400 hover:text-slate-600'
+        }`}>
+          {icon}
+          <span className={`text-[11px] font-bold tracking-wide mt-0.5 ${isActive ? 'opacity-100' : 'opacity-70'}`}>
+            {label}
+          </span>
+        </div>
+        {badge > 0 && (
+          <span className="absolute top-2 right-[20%] bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white shadow-md">
+            {badge}
+          </span>
+        )}
+      </>
     )}
   </NavLink>
 )
