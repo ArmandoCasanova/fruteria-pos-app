@@ -4,7 +4,6 @@ import { Header } from './components/layout/Header'
 import Inventory from './pages/Inventory'
 import ProductEditor from './pages/ProductEditor'
 import Security from './pages/Security'
-import Settings from './pages/Settings'
 
 export default function App() {
   return (
@@ -16,7 +15,6 @@ export default function App() {
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/edit" element={<ProductEditor />} />
           <Route path="/security" element={<Security />} />
-          <Route path="/settings" element={<Settings />} />
         </Routes>
       </main>
       <BottomNav />

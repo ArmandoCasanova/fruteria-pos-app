@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { MdInventory, MdVpnKey, MdSettings } from 'react-icons/md'
+import { MdInventory, MdVpnKey } from 'react-icons/md'
 import { useAppConfig } from '../../context/AppProvider'
 
 export const BottomNav = () => {
@@ -10,7 +10,6 @@ export const BottomNav = () => {
       <div className="flex justify-around items-center h-16 max-w-2xl mx-auto">
         <NavItem to="/inventory" icon={<MdInventory size={24} />} label="Inventario" badge={pendingSync} />
         <NavItem to="/security" icon={<MdVpnKey size={24} />} label="Seguridad" />
-        <NavItem to="/settings" icon={<MdSettings size={24} />} label="Ajustes" />
       </div>
     </nav>
   )

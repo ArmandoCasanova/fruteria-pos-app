@@ -1,12 +1,29 @@
 import { useState } from 'react'
 import { useAppConfig } from '../context/AppProvider'
 import { generateRemotePin } from '../api/client'
-import { MdVpnKey, MdContentCopy } from 'react-icons/md'
+import { MdVpnKey, MdContentCopy, MdExpandMore, MdSave, MdDns } from 'react-icons/md'
 
 export default function Security() {
-  const { baseUrl } = useAppConfig()
+  const { baseUrl, updateBaseUrl } = useAppConfig()
   const [pin, setPin] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showAdvanced, setShowAdvanced] = useState(false)
+  const [ip, setIp] = useState(baseUrl)
+
+  const handleSaveIp = () => {
+    let formatted = ip.trim()
+    if (formatted) {
+      if (!formatted.startsWith('http')) {
+        formatted = `http://${formatted}`
+      }
+
+      if (!/:[0-9]+$/.test(formatted)) {
+        formatted = `${formatted}:3000`
+      }
+    }
+    updateBaseUrl(formatted)
+    setShowAdvanced(false)
+  }
 
   const handleGenerate = async () => {
     if (!baseUrl) return alert('Configura la conexión primero')
@@ -58,6 +75,43 @@ export default function Security() {
         >
           {loading ? 'GENERANDO...' : 'GENERAR NUEVO PIN'}
         </button>
+      </div>
+
+      <div className="mt-4">
+        <button 
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          className="text-slate-400 text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-1 mx-auto hover:text-slate-600 transition-colors py-2"
+        >
+          {showAdvanced ? 'Ocultar Configuración' : 'Configuración de Red'}
+          <MdExpandMore className={`transition-transform duration-300 ${showAdvanced ? 'rotate-180' : ''}`} size={14} />
+        </button>
+        
+        {showAdvanced && (
+          <div className="mt-4 animate-in fade-in zoom-in-95 duration-300 bg-slate-100 p-4 rounded-2xl border border-slate-200">
+            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 block px-1">
+              Dirección del Servidor POS
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <MdDns size={18} />
+              </div>
+              <input
+                type="url"
+                value={ip}
+                onChange={(e) => setIp(e.target.value)}
+                placeholder="ej. http://192.168.1.100:3000"
+                className="w-full pl-9 pr-3 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              />
+            </div>
+            <button
+              onClick={handleSaveIp}
+              className="mt-3 w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-3 rounded-xl transition-colors active:scale-[0.98]"
+            >
+              <MdSave size={16} />
+              ACTUALIZAR CONEXIÓN
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

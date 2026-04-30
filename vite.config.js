@@ -13,10 +13,17 @@ export default defineConfig({
       manifest: {
         name: 'Frutería Lemus Admin',
         short_name: 'FL Admin',
-        theme_color: '#ffffff',
+        theme_color: '#10b981',
         background_color: '#ffffff',
         display: 'standalone',
-        icons: [] // Para evitar errores si no hay iconos aún
+        icons: [
+          {
+            src: 'icon.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable'
+          }
+        ]
       },
       workbox: {
         runtimeCaching: [
